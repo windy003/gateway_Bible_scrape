@@ -57,7 +57,6 @@ def main():
             if chapter_data:
                 # 将章节标题和所有子标题写入文件
                 f.write(f"章节: {chapter_data['chapter_title']}\n")
-                f.write("子标题列表:\n")
                 
                 for i, subtitle in enumerate(chapter_data['subtitles'], 1):
                     f.write(f"  {i}. {subtitle}\n")
