@@ -46,7 +46,8 @@ def main():
     # 创建保存结果的文件
     output_file = "bible_titles.txt"
     
-        
+    # 打开文件进行写入
+    with open(output_file, 'w', encoding='utf-8') as f:
         # 只爬取创世记的50章
         for chapter in range(1, 29):
             print(f"正在爬取创世记第 {chapter} 章的标题...")
