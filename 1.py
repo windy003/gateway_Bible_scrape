@@ -5,7 +5,7 @@ import os
 
 def scrape_bible_chapter_titles(chapter_number):
     """爬取指定章节的标题和所有子标题"""
-    url = f"https://www.biblegateway.com/passage/?search=%E5%88%9B%E4%B8%96%E8%AE%B0%20{chapter_number}&version=CCB"
+    url = f"https://www.biblegateway.com/passage/?search=%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3%20{chapter_number}&version=CSBS"
     
     # 添加请求头，模拟浏览器访问
     headers = {
@@ -46,11 +46,9 @@ def main():
     # 创建保存结果的文件
     output_file = "bible_titles.txt"
     
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write("圣经创世记标题和子标题\n\n")
         
         # 只爬取创世记的50章
-        for chapter in range(1, 51):
+        for chapter in range(1, 29):
             print(f"正在爬取创世记第 {chapter} 章的标题...")
             
             chapter_data = scrape_bible_chapter_titles(chapter)
@@ -63,7 +61,6 @@ def main():
                 for i, subtitle in enumerate(chapter_data['subtitles'], 1):
                     f.write(f"  {i}. {subtitle}\n")
                 
-                f.write(f"URL: {chapter_data['url']}\n")
                 f.write("-" * 50 + "\n\n")
                 
                 print(f"已保存创世记第 {chapter} 章的标题信息，共 {len(chapter_data['subtitles'])} 个子标题")
