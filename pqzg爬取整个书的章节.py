@@ -25,14 +25,17 @@ def scrape_chapter(chapter_num):
         return None
     
     # Extract chapter title
-    chapter_title = soup.find('h3', class_='passage-display')
+    chapter_title = soup.find('div', class_='dropdown-display-text')
     title_text = chapter_title.text.strip() if chapter_title else f"第{chapter_num}章"
     
     # Extract verses
     verses = passage_content.find_all(['p', 'h3', 'h4'])
     
     chapter_text = [title_text]
-    
+
+
+    chapter_title_text_all.append(title_text)
+
     for verse in verses:
         # Skip footnotes and other irrelevant elements
         if 'footnotes' in verse.get('class', []) or 'crossrefs' in verse.get('class', []):
@@ -41,13 +44,15 @@ def scrape_chapter(chapter_num):
         # Check if it's a section heading
         if verse.name in ['h3', 'h4']:
             chapter_text.append(f"\n### {verse.text.strip()}\n")
+            chapter_title_text_all.append(f"\n### {verse.text.strip()}\n")
+
         else:
             # Clean up the text
             text = verse.text.strip()
             if text and not text.startswith('Footnotes') and not text.startswith('Cross references'):
                 chapter_text.append(text)
     
-    return "\n".join(chapter_text)
+    return "\n".join(chapter_text), "\n".join(chapter_title_text_all)
 
 def save_chapter(chapter_num, content):
     """Save the chapter content to a file"""
@@ -59,15 +64,21 @@ def save_chapter(chapter_num, content):
     print(f"Saved chapter {chapter_num}")
 
 
+def save_chapter_title_text_all(content):
+    if not os.path.exists("tmp"):
+        os.makedirs("tmp")
+    with open("tmp/0.txt", "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"Saved chapter_title_text_all")
+
 def main():
-    all_chapters = []
     
     # 将 chapter_nums 转换为整数
     chapter_nums_int = int(chapter_nums)
     
     for chapter_num in range(1, chapter_nums_int + 1): 
         print(f"Scraping chapter {chapter_num}...")
-        chapter_content = scrape_chapter(chapter_num)
+        chapter_content, chapter_title_text_all = scrape_chapter(chapter_num)
         
         if chapter_content:
             save_chapter(chapter_num, chapter_content)
@@ -77,8 +88,10 @@ def main():
         else:
             print(f"Failed to scrape chapter {chapter_num}")
     
+    save_chapter_title_text_all(chapter_title_text_all)
 
 if __name__ == "__main__":
+    chapter_title_text_all = []
     chapter_nums = input("请输入要爬取的总章节数：")
     url = input("请输入要爬取的url系列,比如:'https://www.biblegateway.com/passage/?search=马太福音+{chapter_num}&version=CSBS':")
     main()
