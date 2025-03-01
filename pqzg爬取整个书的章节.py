@@ -42,7 +42,7 @@ def scrape_chapter(chapter_num):
             continue
             
         # Check if it's a section heading
-        if verse.name in ['h3', 'h4']:
+        if verse.name in ['h3']:
             chapter_text.append(f"\n### {verse.text.strip()}\n")
             chapter_title_text_all.append(f"\n### {verse.text.strip()}\n")
 
